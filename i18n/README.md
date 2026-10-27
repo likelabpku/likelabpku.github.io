@@ -12,7 +12,7 @@ python3 scripts/build_locales.py
 
 用户于 2026-10-27 确定：论文标题、摘要与作者署名保留英文原文；其余介绍、动态、研究成果说明及交互控件使用中文。论文标题在首页代表成果和动态中的引用也保留原文。
 
-单篇论文动态的标题使用该条动态所引用论文的正式英文全名，再接中文发表、录用或报告信息；不以中文研究主题概括替代论文名称。正文中引用的论文名称同样保持英文。多篇论文汇总与获奖动态使用中文标题。
+News 大标题中指代论文的部分，按对应英文大标题的原有措辞保留，包括简称或英文描述；只翻译发表、录用、报告等周围表述。例如 `GroundingME at CVPR 2026` 对应 `GroundingME 发表于 CVPR 2026`，`Dataset evaluation study in Natural Language Processing` 对应 `Dataset evaluation study 发表于 Natural Language Processing`。英文大标题采用简称时，中文版也采用该简称，不扩写为论文全名。展开列表中的正式论文标题继续保留英文原文。多篇论文汇总与获奖动态使用中文标题。
 
 中文姓名依据现有个人照说明与校友核验资料；管龙宇（Longyu Guan）、宋佳霖（Jialin Song）、唐子超（Zichao Tang）由用户于 2026-10-27 确认。两版论文搜索均支持已核对成员的中英文姓名。
 
