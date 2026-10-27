@@ -119,3 +119,40 @@
 
 /* Preserve the official conference name inside uppercase labels. */
 .conference-name{text-transform:none}
+
+/* Language editions share the same layout; the switch stays visible on mobile. */
+.header-inner{gap:22px}
+.brand{margin-right:auto}
+.site-nav{order:1}
+.language-switch{order:2;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;min-width:48px;min-height:38px;padding:5px 12px;border:1px solid #d9dfed;border-radius:6px;color:var(--blue);background:#f7f9fe;font-size:13px;font-weight:600;line-height:1.4;white-space:nowrap}
+.language-switch:hover{background:#edf1fb;border-color:#aab6da;text-decoration:none}
+.menu-toggle{order:3;flex-shrink:0}
+html[lang="zh-CN"] body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif}
+html[lang="zh-CN"] h1,html[lang="zh-CN"] h2,html[lang="zh-CN"] .person h3{letter-spacing:0}
+html[lang="zh-CN"] .hero-copy p{line-height:1.95}
+html[lang="zh-CN"] .hero-brand .full-name{line-height:1.8}
+html[lang="zh-CN"] .eyebrow{letter-spacing:.1em}
+html[lang="zh-CN"] .role-nav{gap:16px 25px}
+html[lang="zh-CN"] .news-date time{white-space:normal}
+@media(max-width:1000px){.header-inner{gap:16px}.site-nav{gap:18px}}
+@media(max-width:900px){
+ .site-header{height:70px}
+ .brand{font-size:21px;gap:10px}
+ .brand img{width:33px;height:33px}
+ .header-inner{gap:12px}
+ .menu-toggle{display:flex}
+ .site-nav{position:absolute;top:69px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px 22px;gap:0;box-shadow:0 10px 20px #1d26350a;flex-direction:column;align-items:stretch}
+ .js .site-nav{display:none}
+ .js .site-nav.open{display:flex}
+ .site-nav>a{padding:10px 12px}
+ .site-nav>a[aria-current=page]:after{display:none}
+ .site-nav .search-link{margin-top:6px;gap:10px}
+ .site-nav .search-link:after{content:"Search publications";font-size:14px}
+ html[lang="zh-CN"] .site-nav .search-link:after{content:"搜索论文"}
+ body:not(.js) .site-header{height:auto;position:relative}
+ body:not(.js) .header-inner{padding-top:15px;flex-wrap:wrap}
+ body:not(.js) .site-nav{order:4;flex-basis:100%;position:static;flex-direction:row;flex-wrap:wrap;box-shadow:none}
+ body:not(.js) .menu-toggle{display:none}
+}
+@media(max-width:380px){.header-inner{gap:8px}.language-switch{padding-inline:9px;min-width:44px}.brand{font-size:19px;gap:8px}}
+@media print{.language-switch{display:none}}

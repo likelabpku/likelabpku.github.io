@@ -1,16 +1,52 @@
 'use strict';
 document.body.classList.add('js');
+const chinese = document.documentElement.lang === 'zh-CN';
+const ui = chinese ? {
+  openMenu: '打开导航', closeMenu: '关闭导航',
+  play: '播放相册', pause: '暂停相册',
+  paperCount: (visible, total) => `显示 ${visible} 篇，共 ${total} 篇论文`,
+} : {
+  openMenu: 'Open navigation', closeMenu: 'Close navigation',
+  play: 'Play slideshow', pause: 'Pause slideshow',
+  paperCount: (visible, total) => `${visible} of ${total} publications`,
+};
+
+// The static link works without JS; enhance it with the current page state.
+const languageSwitch = document.querySelector('[data-language-switch]');
+const languageTarget = languageSwitch ? new URL(languageSwitch.href) : null;
+function syncLanguageSwitch() {
+  if (!languageTarget) return;
+  const target = new URL(languageTarget);
+  target.search = location.search;
+  target.hash = location.hash;
+  const search = document.querySelector('#paper-search');
+  if (search) {
+    const filters = {
+      q: search.value,
+      year: document.querySelector('#paper-year').value,
+      type: document.querySelector('[data-status][aria-pressed="true"]')?.dataset.status || 'All',
+    };
+    for (const [key, value] of Object.entries(filters)) {
+      if (value && (key === 'q' || value !== 'All')) target.searchParams.set(key, value);
+      else target.searchParams.delete(key);
+    }
+  }
+  languageSwitch.href = target.href;
+}
+languageSwitch?.addEventListener('click', syncLanguageSwitch);
+window.addEventListener('hashchange', syncLanguageSwitch);
+
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('.site-nav');
 function closeMenu() {
   navigation.classList.remove('open');
   menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Open navigation');
+  menuButton.setAttribute('aria-label', ui.openMenu);
 }
 menuButton?.addEventListener('click', () => {
   const open = navigation.classList.toggle('open');
   menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  menuButton.setAttribute('aria-label', open ? ui.closeMenu : ui.openMenu);
 });
 navigation?.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && navigation.classList.contains('open')) { closeMenu(); menuButton.focus(); } });
@@ -26,6 +62,7 @@ if (searchInput) {
   const params = new URLSearchParams(location.search);
   searchInput.value = params.get('q') || '';
   if ([...year.options].some(o => o.value === params.get('year'))) year.value = params.get('year');
+  if (typeButtons.some(button => button.dataset.status === params.get('type'))) status = params.get('type');
   function filterPapers() {
     const terms = searchInput.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     let visible = 0;
@@ -36,9 +73,10 @@ if (searchInput) {
       visible += Number(matches);
     });
     document.querySelectorAll('.pub-year').forEach(section => { section.hidden = ![...section.querySelectorAll('.pub-item')].some(p => !p.hidden); });
-    document.querySelector('#paper-count').textContent = `${visible} of ${papers.length} publications`;
+    document.querySelector('#paper-count').textContent = ui.paperCount(visible, papers.length);
     document.querySelector('#no-results').hidden = visible !== 0;
     typeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.status === status)));
+    syncLanguageSwitch();
   }
   searchInput.addEventListener('input', filterPapers);
   year.addEventListener('change', filterPapers);
@@ -70,8 +108,8 @@ if (gallery) {
   }
   function updatePlayback() {
     clearInterval(timer);
-    play.setAttribute('aria-label', playing ? 'Pause slideshow' : 'Play slideshow');
-    play.title = playing ? 'Pause slideshow' : 'Play slideshow';
+    play.setAttribute('aria-label', playing ? ui.pause : ui.play);
+    play.title = playing ? ui.pause : ui.play;
     play.querySelector('[data-play-icon]').hidden = playing;
     play.querySelector('[data-pause-icon]').hidden = !playing;
     gallery.querySelector('.gallery-stage').setAttribute('aria-live', playing ? 'off' : 'polite');
@@ -87,3 +125,4 @@ if (gallery) {
   reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) { playing = false; updatePlayback(); } });
   show(0); updatePlayback();
 }
+syncLanguageSwitch();
